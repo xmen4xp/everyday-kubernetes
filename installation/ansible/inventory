@@ -1,0 +1,11 @@
+# inventory hosts
+
+[master]
+master ansible_host=da2b1bb36f1c.mylabserver.com ansible_ssh_private_key_file=~/.ssh/guru ansible_user=cloud_user
+
+[nodes]
+node1 ansible_host=da2b1bb36f2c.mylabserver.com ansible_ssh_private_key_file=~/.ssh/guru ansible_user=cloud_user
+node2 ansible_host=da2b1bb36f3c.mylabserver.com ansible_ssh_private_key_file=~/.ssh/guru ansible_user=cloud_user
+
+[local]
+control ansible_connection=local

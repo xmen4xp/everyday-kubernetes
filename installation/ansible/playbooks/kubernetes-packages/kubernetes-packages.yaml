@@ -1,0 +1,48 @@
+# kubernetes-packages.yaml
+---
+  - hosts: master:nodes
+    tasks:
+      -
+      - name: Disable Swap
+        shell: sudo swapoff -a
+
+      - name: Update apt-get repo and cache
+        apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+      - name: Install apt-transport-https and curl
+        ansible.builtin.apt:
+          pkg:
+            - apt-transport-https
+            - curl
+
+      - name: Configure package key
+        shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+      - name: Configure xenial package
+        ansible.builtin.lineinfile: path=/etc/apt/sources.list.d/kubernetes.list regexp='kubernetes-xenial main$' line='deb https://apt.kubernetes.io/ kubernetes-xenial main' create=true
+
+      - name: Update apt-get repo and cache
+        apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+      - name: Apt update.
+        shell: sudo apt-get update
+
+#      - name: Install kubectl
+#        shell: sudo apt-get install -y kubelet=1.24.0-00 kubeadm=1.24.0-00 kubectl=1.24.0-00
+
+      - name: Install kubectl, kubelet and kubeadm
+        ansible.builtin.apt:
+          pkg:
+          - kubelet=1.24.0-00
+          - kubeadm=1.24.0-00
+          - kubectl=1.24.0-00
+
+      - name: Hold the package.
+        shell: sudo apt-mark hold kubelet kubeadm kubectl
+
+ #     - name: Install kubectl, kubelet and kubeadm
+ #       ansible.builtin.apt:
+ #         pkg:
+ #           - kubelet=1.24.0-00
+ #           - kubeadm=1.24.0-00
+ #           - kubectl=1.24.0-00

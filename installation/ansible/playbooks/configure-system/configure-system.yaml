@@ -1,0 +1,57 @@
+# configure-system.yaml
+---
+  - hosts: master:nodes
+    tasks:
+
+      - name: Configure overlay for containerd
+        ansible.builtin.lineinfile: path=/etc/modules-load.d/containerd.conf regexp='overlay$' line='overlay' create=true
+
+      - name: Configure br_netfilter for containerd
+        ansible.builtin.lineinfile: path=/etc/modules-load.d/containerd.conf regexp='br_netfilter$' line='br_netfilter' create=true
+
+      - name: Enable overlay module
+        shell: sudo modprobe overlay
+
+      - name: Enable br_netfilter module
+        shell: sudo modprobe br_netfilter
+
+      - name: Configure iptables
+        ansible.builtin.lineinfile: path=/etc/sysctl.d/99-kubernetes-cri.conf regexp='^net.bridge.bridge-nf-call-iptables' line='net.bridge.bridge-nf-call-iptables=1' create=true
+
+      - name: Configure iptables6
+        ansible.builtin.lineinfile: path=/etc/sysctl.d/99-kubernetes-cri.conf regexp='^net.bridge.bridge-nf-call-ip6tables' line='net.bridge.bridge-nf-call-ip6tables=1' create=true
+
+      - name: Configure ip_forward
+        ansible.builtin.lineinfile: path=/etc/sysctl.d/99-kubernetes-cri.conf regexp='^net.ipv4.ip_forward' line='net.ipv4.ip_forward=1' create=true
+
+      - name: Enable br_netfilter module
+        shell: sudo sysctl --system
+
+      - name: Update apt-get repo and cache
+        apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+      - name: Install containerd
+        ansible.builtin.apt:
+          pkg:
+          - containerd
+
+      - name: Create containerd directory
+        shell: sudo mkdir -p /etc/containerd
+
+      - name: Configure containerd
+        shell: sudo containerd config default | sudo tee /etc/containerd/config.toml
+
+      - name: Restart containerd
+        shell: sudo systemctl restart containerd
+
+      - name: Disable Swap
+        shell: sudo swapoff -a
+
+      - name: Update apt-get repo and cache
+        apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+      - name: Install apt-transport-https and curl
+        ansible.builtin.apt:
+          pkg:
+            - apt-transport-https
+            - curl

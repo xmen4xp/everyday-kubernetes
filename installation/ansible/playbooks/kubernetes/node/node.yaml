@@ -1,0 +1,19 @@
+# master.yaml
+---
+  - hosts: master
+    tasks:
+
+      - name: Install Kube master
+        shell: sudo kubeadm init --pod-network-cidr 192.168.0.0/16 --kubernetes-version 1.24.0
+
+      - name: Configure kube master
+        shell: mkdir -p $HOME/.kube
+
+      - name: Configure kube master - 2
+        shell: sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+      - name: Configure kube master - 3
+        shell: sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+      - name: Install CNI
+        shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml

@@ -1,0 +1,7 @@
+# pingan.yaml
+#
+---
+  - hosts: all
+    tasks:
+      - name: Verifying hosts are reachable
+        action: ping

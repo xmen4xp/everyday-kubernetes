@@ -1,0 +1,14 @@
+# configure-host.yaml
+---
+  - hosts: master:nodes
+    tasks:
+
+      - name: Configure hostname
+        ansible.builtin.hostname:
+          name: "{{ inventory_hostname }}"
+
+      - name: Configure /etc/hosts
+        ansible.builtin.lineinfile: path=/etc/hosts regexp='"{{ inventory_hostname }}"$' line='{{ hostvars[item].ansible_all_ipv4_addresses[0] }} {{ hostvars[item].inventory_hostname }}'
+        when: hostvars[item].ansible_host is defined
+        with_items: "{{ groups.all }}"
+
