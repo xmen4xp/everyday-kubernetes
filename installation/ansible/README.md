@@ -1,5 +1,8 @@
 # Build - a - Kubernetes using Ansible
 
+1. Need sudo access to remote machines
+2. ssh keys should be pre-populated in the remote machines.
+
 ## Step 1: Fill in your setup info in file: inventory
 
 Inventory is composed of two catogeries of nodes:
