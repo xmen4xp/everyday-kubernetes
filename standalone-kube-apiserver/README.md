@@ -1,0 +1,1 @@
+kube-apiserver --etcd-servers http://localhost:2379 --service-account-key-file=sa.pub --service-account-signing-key-file=sa.key --service-account-issuer=api --tls-cert-file=apiserver.crt --tls-private-key-file=apiserver.key --client-ca-file=ca.crt  --service-cluster-ip-range=10.24.0.0/16 --v=9
