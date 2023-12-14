@@ -6,6 +6,7 @@ require (
 	k8s.io/api v0.28.4
 	k8s.io/apimachinery v0.28.4
 	k8s.io/client-go v0.28.4
+	perfdm v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -47,3 +48,5 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+replace perfdm => ./datamodel
